@@ -76,7 +76,7 @@ export class Commiter implements ICommiter {
         execSync(`git commit -m "${ this._getCommitMessage(type, entities, message) }"`, { cwd: this._options.gitFolder });
 
         if (autoPush) {
-            execSync(`git commit ${ this._options.gitRemoteRepositoryName } HEAD`, { cwd: this._options.gitFolder });
+            execSync(`git push ${ this._options.gitRemoteRepositoryName } HEAD`, { cwd: this._options.gitFolder });
         }
     }
 
