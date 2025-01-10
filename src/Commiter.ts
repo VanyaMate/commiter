@@ -23,20 +23,27 @@ export class Commiter implements ICommiter {
 
     private async _getType (): Promise<string> {
         return select({
-            message: 'Тип коммита:',
+            message: 'Commit type:',
             choices: this._getSelectChoicesByOption(this._options.types),
+            theme  : {
+                helpMode: 'always',
+            },
         });
     }
 
     private async _getEntities (): Promise<Array<string>> {
         return checkbox({
-            message: 'Задетые сущности:',
-            choices: this._getSelectChoicesByOption(this._options.entities),
+            message : 'Commit entities:',
+            choices : this._getSelectChoicesByOption(this._options.entities),
+            required: true,
+            theme   : {
+                helpMode: 'always',
+            },
         });
     }
 
     private async _getMessage (): Promise<string> {
-        return input({ message: 'Сообщение:' });
+        return input({ message: 'Commit message:' });
     }
 
     private _createCommit (type: string, entities: Array<string>, message: string) {
