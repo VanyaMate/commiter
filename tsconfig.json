@@ -10,7 +10,7 @@
         "moduleResolution": "Node"
     },
     "include": [
-        "./src/Commiter.ts"
+        "./index.ts"
     ],
     "exclude": [
         "node_modules",

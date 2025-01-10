@@ -1,5 +1,9 @@
 import { ICommiter } from './Commiter.interface';
-import { Choice, CommiterListOption, CommiterOptions } from './Commiter.types';
+import {
+    Choice,
+    CommiterListOption,
+    CommiterOptions,
+} from './Commiter.types';
 import { input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
