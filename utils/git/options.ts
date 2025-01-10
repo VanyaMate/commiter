@@ -10,6 +10,6 @@ const gitFolder  = resolve(__dirname, '..', '..');
 export default {
     types    : [ 'Update', 'New feature', 'Fix' ],
     entities : [ 'App' ],
-    pattern  : '[ {{type}} ] {{entity}} - {{message}}',
+    pattern  : '{{type}} : {{entities}} - {{message}}',
     gitFolder: gitFolder,
 } as CommiterOptions;
