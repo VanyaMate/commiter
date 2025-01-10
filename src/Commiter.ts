@@ -53,9 +53,10 @@ export class Commiter implements ICommiter {
 
     private async _getAutoPush (): Promise<boolean> {
         return expand({
-            message: 'Auto push?',
-            default: 'n',
-            choices: [
+            message : 'Auto push?',
+            expanded: true,
+            default : 'n',
+            choices : [
                 {
                     key  : 'n',
                     name : 'No',
