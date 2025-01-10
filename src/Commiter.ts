@@ -53,9 +53,10 @@ export class Commiter implements ICommiter {
 
     private async _getAutoPush (): Promise<boolean> {
         return expand({
-            message : 'Auto push? (default No)',
+            message : `Auto push? (default ${ this._options.gitPushDefault
+                                              ? 'Yes' : 'No' })`,
             expanded: true,
-            default : 'n',
+            default : this._options.gitPushDefault ? 'y' : 'n',
             choices : [
                 {
                     key  : 'n',

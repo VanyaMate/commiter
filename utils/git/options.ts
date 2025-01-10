@@ -13,4 +13,5 @@ export default {
     pattern                : '{{type}} : {{entities}} - {{message}}',
     gitFolder              : gitFolder,
     gitRemoteRepositoryName: 'origin',
+    gitPushDefault         : true,
 } as CommiterOptions;

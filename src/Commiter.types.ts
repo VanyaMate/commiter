@@ -8,6 +8,7 @@ export type CommiterOptions = {
     pattern: string;
     gitFolder: string;
     gitRemoteRepositoryName?: string;
+    gitPushDefault?: boolean;
 }
 
 export type Choice<Value> = {

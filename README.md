@@ -18,6 +18,8 @@ export type CommiterOptions = {
     entities: CommiterListOption;
     pattern: string;
     gitFolder: string;
+    gitRemoteRepositoryName?: string;
+    gitPushDefault?: boolean;
 }
 ```
 
@@ -31,13 +33,15 @@ const __dirname = import.meta.dirname;
 const gitFolder = resolve(__dirname, '..', '..');
 
 const config: CommiterOptions = {
-    types    : {
+    types                  : {
         'Fix': 'Fix 💡',
         'Up' : 'Update ♥',
     },
-    entities : [ 'App', 'User', { Comm: 'Commentary' } ],
-    pattern  : '{{type}} : {{entities}} - {{message}}',
-    gitFolder: gitFolder,
+    entities               : [ 'App', 'User', { Comm: 'Commentary' } ],
+    pattern                : '{{type}} : {{entities}} - {{message}}',
+    gitFolder              : gitFolder,
+    gitRemoteRepositoryName: 'origin',
+    gitPushDefault         : true,
 };
 ```
 
@@ -54,6 +58,11 @@ const config: CommiterOptions = {
 - `{{message}}` - заменится на введенное сообщение
 
 `gitFolder` - папка в которой будут вызываться команды `git add .` и `git commit -m "полное сообщение"`
+
+`gitRemoteRepositoryName` - название git репозитория который вы указали через `git remote add [name]`.
+Например: `origin`. Если этот параметр указан, то добавится поле выбора автоматического push-а.
+
+`gitPushDefault` - `true` означает, что по умолчанию при выборе запушить или нет - будет `y` (Yes), иначе `n` (No)
 
 Дальше создать эксемпляр в который передать конфиг коммитера и вызвать метод `create`
 
@@ -76,6 +85,7 @@ new Commiter(config).create();
 ```
 
 и вызывать как
+
 ```shell
 npm run commit
 ```
