@@ -5,7 +5,7 @@ export declare class Commiter implements ICommiter {
     constructor(_options: CommiterOptions);
     create(): Promise<void>;
     private _getType;
-    private _getEntity;
+    private _getEntities;
     private _getMessage;
     private _createCommit;
     private _getCommitMessage;

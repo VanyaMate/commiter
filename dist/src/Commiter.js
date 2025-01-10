@@ -1,4 +1,4 @@
-import { input, select } from '@inquirer/prompts';
+import { checkbox, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
 export class Commiter {
@@ -8,9 +8,9 @@ export class Commiter {
     }
     async create() {
         const type = await this._getType();
-        const entity = await this._getEntity();
+        const entities = await this._getEntities();
         const message = await this._getMessage();
-        this._createCommit(type, entity, message);
+        this._createCommit(type, entities, message);
     }
     async _getType() {
         return select({
@@ -18,23 +18,23 @@ export class Commiter {
             choices: this._getSelectChoicesByOption(this._options.types),
         });
     }
-    async _getEntity() {
-        return select({
-            message: 'Выберите сущность коммита',
+    async _getEntities() {
+        return checkbox({
+            message: 'Задетые сущности:',
             choices: this._getSelectChoicesByOption(this._options.entities),
         });
     }
     async _getMessage() {
         return input({ message: 'Введите сообщение' });
     }
-    _createCommit(type, entity, message) {
+    _createCommit(type, entities, message) {
         execSync('git add .', { cwd: this._options.gitFolder });
-        execSync(`git commit -m "${this._getCommitMessage(type, entity, message)}"`, { cwd: this._options.gitFolder });
+        execSync(`git commit -m "${this._getCommitMessage(type, entities, message)}"`, { cwd: this._options.gitFolder });
     }
-    _getCommitMessage(type, entity, message) {
+    _getCommitMessage(type, entities, message) {
         return this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entity}}`, entity)
+            .replace(`{{entities}}`, entities.sort().join(', '))
             .replace(`{{message}}`, message);
     }
     _getSelectChoicesByOption(option) {
