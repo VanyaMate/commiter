@@ -4,7 +4,7 @@ import {
     CommiterListOption,
     CommiterOptions,
 } from './Commiter.types';
-import { checkbox, input, select } from '@inquirer/prompts';
+import { checkbox, expand, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
 
@@ -18,7 +18,12 @@ export class Commiter implements ICommiter {
         const entities = await this._getEntities();
         const message  = await this._getMessage();
 
-        this._createCommit(type, entities, message);
+        if (this._options.gitRemoteRepositoryName) {
+            const autoPush = await this._getAutoPush();
+            return this._createCommit(type, entities, message, autoPush);
+        }
+
+        return this._createCommit(type, entities, message);
     }
 
     private async _getType (): Promise<string> {
@@ -46,9 +51,33 @@ export class Commiter implements ICommiter {
         return input({ message: 'Commit message:' });
     }
 
-    private _createCommit (type: string, entities: Array<string>, message: string) {
+    private async _getAutoPush (): Promise<boolean> {
+        return expand({
+            message: 'Auto push?',
+            default: 'n',
+            choices: [
+                {
+                    key  : 'n',
+                    name : 'No',
+                    value: false,
+                },
+                {
+                    key  : 'y',
+                    name : 'Yes',
+                    value: true,
+                },
+            ],
+
+        });
+    }
+
+    private _createCommit (type: string, entities: Array<string>, message: string, autoPush: boolean = false) {
         execSync('git add .', { cwd: this._options.gitFolder });
         execSync(`git commit -m "${ this._getCommitMessage(type, entities, message) }"`, { cwd: this._options.gitFolder });
+
+        if (autoPush) {
+            execSync(`git commit ${ this._options.gitRemoteRepositoryName } HEAD`, { cwd: this._options.gitFolder });
+        }
     }
 
     private _getCommitMessage (type: string, entities: Array<string>, message: string): string {

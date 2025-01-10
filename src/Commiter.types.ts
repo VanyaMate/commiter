@@ -7,6 +7,7 @@ export type CommiterOptions = {
     entities: CommiterListOption;
     pattern: string;
     gitFolder: string;
+    gitRemoteRepositoryName?: string;
 }
 
 export type Choice<Value> = {
