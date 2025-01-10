@@ -8,8 +8,8 @@ const __dirname  = dirname(__filename);
 const gitFolder  = resolve(__dirname, '..', '..');
 
 export default {
-    entities : [ 'Update', 'New feature', 'Fix' ],
-    types    : [ 'App' ],
+    types    : [ 'Update', 'New feature', 'Fix' ],
+    entities : [ 'App' ],
     pattern  : '[ {{type}} ] {{entity}} - {{message}}',
     gitFolder: gitFolder,
 } as CommiterOptions;

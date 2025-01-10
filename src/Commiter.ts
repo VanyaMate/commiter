@@ -4,7 +4,7 @@ import {
     CommiterListOption,
     CommiterOptions,
 } from './Commiter.types';
-import { input, select } from '@inquirer/prompts';
+import { checkbox, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
 
@@ -14,11 +14,11 @@ export class Commiter implements ICommiter {
     }
 
     public async create (): Promise<void> {
-        const type    = await this._getType();
-        const entity  = await this._getEntity();
-        const message = await this._getMessage();
+        const type     = await this._getType();
+        const entities = await this._getEntities();
+        const message  = await this._getMessage();
 
-        this._createCommit(type, entity, message);
+        this._createCommit(type, entities, message);
     }
 
     private async _getType (): Promise<string> {
@@ -28,9 +28,9 @@ export class Commiter implements ICommiter {
         });
     }
 
-    private async _getEntity (): Promise<string> {
-        return select({
-            message: 'Выберите сущность коммита',
+    private async _getEntities (): Promise<Array<string>> {
+        return checkbox({
+            message: 'Задетые сущности:',
             choices: this._getSelectChoicesByOption(this._options.entities),
         });
     }
@@ -39,15 +39,15 @@ export class Commiter implements ICommiter {
         return input({ message: 'Введите сообщение' });
     }
 
-    private _createCommit (type: string, entity: string, message: string) {
+    private _createCommit (type: string, entities: Array<string>, message: string) {
         execSync('git add .', { cwd: this._options.gitFolder });
-        execSync(`git commit -m "${ this._getCommitMessage(type, entity, message) }"`, { cwd: this._options.gitFolder });
+        execSync(`git commit -m "${ this._getCommitMessage(type, entities, message) }"`, { cwd: this._options.gitFolder });
     }
 
-    private _getCommitMessage (type: string, entity: string, message: string): string {
+    private _getCommitMessage (type: string, entities: Array<string>, message: string): string {
         return this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entity}}`, entity)
+            .replace(`{{entities}}`, entities.sort().join(', '))
             .replace(`{{message}}`, message);
     }
 
