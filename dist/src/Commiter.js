@@ -14,7 +14,7 @@ export class Commiter {
     }
     async _getType() {
         return select({
-            message: 'Выберите тип коммита',
+            message: 'Тип коммита:',
             choices: this._getSelectChoicesByOption(this._options.types),
         });
     }
@@ -25,7 +25,7 @@ export class Commiter {
         });
     }
     async _getMessage() {
-        return input({ message: 'Введите сообщение' });
+        return input({ message: 'Сообщение:' });
     }
     _createCommit(type, entities, message) {
         execSync('git add .', { cwd: this._options.gitFolder });

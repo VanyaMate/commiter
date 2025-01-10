@@ -23,7 +23,7 @@ export class Commiter implements ICommiter {
 
     private async _getType (): Promise<string> {
         return select({
-            message: 'Выберите тип коммита',
+            message: 'Тип коммита:',
             choices: this._getSelectChoicesByOption(this._options.types),
         });
     }
@@ -36,7 +36,7 @@ export class Commiter implements ICommiter {
     }
 
     private async _getMessage (): Promise<string> {
-        return input({ message: 'Введите сообщение' });
+        return input({ message: 'Сообщение:' });
     }
 
     private _createCommit (type: string, entities: Array<string>, message: string) {
