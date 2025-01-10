@@ -1,0 +1,29 @@
+{
+    "name": "@vanyamate/commiter",
+    "version": "0.0.1",
+    "description": "Simple commiter for project",
+    "keywords": [
+        "Git"
+    ],
+    "license": "ISC",
+    "author": "VanyaMate",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/VanyaMate/commiter.git"
+    },
+    "scripts": {
+        "build": "tsc",
+        "commit": "tsx utils/git/commiter.ts"
+    },
+    "devDependencies": {
+        "@inquirer/prompts": "^7.2.1",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "@vanyamate/types-kit": "^0.0.15"
+    }
+}
