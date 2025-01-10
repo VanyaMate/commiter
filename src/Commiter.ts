@@ -68,7 +68,6 @@ export class Commiter implements ICommiter {
                     value: true,
                 },
             ],
-
         });
     }
 
