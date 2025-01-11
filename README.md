@@ -21,10 +21,13 @@ export type CommiterListOption =
 export type CommiterOptions = {
     types: CommiterListOption;
     entities: CommiterListOption;
+    entitiesSeparator?: string;         // Default: ', '
+    postfixes?: CommiterListOption;
+    postfixesSeparator?: string;        // Default: ', '
     pattern: string;
     gitFolder: string;
     gitRemoteRepositoryName?: string;
-    gitPushDefault?: boolean;
+    gitPushDefault?: boolean;           // Default: false
 }
 ```
 
@@ -43,7 +46,15 @@ const config: CommiterOptions = {
         'Up' : 'Update ♥',
     },
     entities               : [ 'App', 'User', { Comm: 'Commentary' } ],
-    pattern                : '{{type}} : {{entities}} - {{message}}',
+    entitiesSeparator      : ', ',
+    postfixes              : {
+        'Unit tests'     : 'unit',
+        'Build'          : 'build',
+        'Playwright'     : 'playwright',
+        'Telegram notify': 'tg',
+    },
+    postfixesSeparator     : '%',
+    pattern                : '{{type}} : {{entities}} - {{message}} %{{postfixes}}%',
     gitFolder              : gitFolder,
     gitRemoteRepositoryName: 'origin',
     gitPushDefault         : true,
@@ -59,8 +70,9 @@ const config: CommiterOptions = {
 Паттерн указывается как строка.
 
 - `{{type}}` - заменится на указанный тип из списка `types`
-- `{{entities}}` - заменится на выбранные сущности из `entities` (через запятую)
+- `{{entities}}` - заменится на выбранные сущности из `entities`
 - `{{message}}` - заменится на введенное сообщение
+- `{{postfixes}}` - заменится на выбранные `postfixes`
 
 `gitFolder` - папка в которой будут вызываться команды `git add .` и `git commit -m "полное сообщение"`
 

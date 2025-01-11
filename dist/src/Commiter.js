@@ -10,9 +10,7 @@ export class Commiter {
         const type = await this._getType();
         const entities = await this._getEntities();
         const message = await this._getMessage();
-        const postfixes = this._options.postfixes?.length
-            ? await this._getPostfixes()
-            : [];
+        const postfixes = await this._getPostfixes();
         if (this._options.gitRemoteRepositoryName) {
             const autoPush = await this._getAutoPush();
             return this._createCommit(type, entities, message, postfixes, autoPush);
@@ -42,10 +40,17 @@ export class Commiter {
         return input({ message: 'Commit message:' });
     }
     async _getPostfixes() {
+        if (!this._options.postfixes) {
+            return [];
+        }
+        const choices = this._getSelectChoicesByOption(this._options.postfixes);
+        if (!choices.length) {
+            return [];
+        }
         return checkbox({
             message: 'Commit postfixes:',
-            choices: this._getSelectChoicesByOption(this._options.postfixes),
-            required: true,
+            choices: choices,
+            required: false,
             theme: {
                 helpMode: 'always',
             },
