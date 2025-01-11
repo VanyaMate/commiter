@@ -7,7 +7,6 @@ import {
 import { checkbox, expand, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
-import * as repl from 'node:repl';
 
 
 export class Commiter implements ICommiter {

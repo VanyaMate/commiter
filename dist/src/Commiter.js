@@ -93,7 +93,9 @@ export class Commiter {
             .replace(`{{message}}`, message);
         if (isArray(postfixReplaceOptions)) {
             const [replaceString, prefix, postfix] = postfixReplaceOptions;
-            return commitMessage.replace(replaceString, `${prefix}${postfixesString}${postfix}`);
+            return commitMessage.replace(replaceString, postfixesString
+                ? `${prefix}${postfixesString}${postfix}`
+                : '');
         }
         return commitMessage;
     }
@@ -118,7 +120,7 @@ export class Commiter {
         }
     }
     _getReplaceOptions(type) {
-        const [replaceString, prefix, postfix] = this._options.pattern.match(new RegExp(`{{(.+|)${type}(.+|)}}`));
+        const [replaceString, prefix, postfix] = this._options.pattern.match(new RegExp(`\{\{([^{}]*)${type}([^{}]*)}\}`));
         return [replaceString, prefix, postfix];
     }
 }
