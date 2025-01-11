@@ -11,7 +11,7 @@ export default {
     types                  : [ 'Update', 'New feature', 'Fix' ],
     entities               : [ 'App' ],
     entitiesSeparator      : ', ',
-    pattern                : `{{type}} : {{entities}} - {{message}} %{{postfixes}}%`,
+    pattern                : `{{type}} : {{entities}} - {{message}}{{ %postfixes%}}`,
     postfixes              : {
         'Unit tests'     : 'unit',
         'Build'          : 'build',

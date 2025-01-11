@@ -12,4 +12,5 @@ export declare class Commiter implements ICommiter {
     private _createCommit;
     private _getCommitMessage;
     private _getSelectChoicesByOption;
+    private _getReplaceOptions;
 }

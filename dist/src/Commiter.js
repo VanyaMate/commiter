@@ -84,11 +84,18 @@ export class Commiter {
         }
     }
     _getCommitMessage(type, entities, message, postfixes) {
-        return this._options.pattern
+        const entitiesString = entities.sort().join(this._options.entitiesSeparator ?? ', ');
+        const postfixesString = postfixes.sort().join(this._options.postfixesSeparator ?? ', ');
+        const postfixReplaceOptions = this._getReplaceOptions('postfixes');
+        const commitMessage = this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entities}}`, entities.sort().join(this._options.entitiesSeparator ?? ', '))
-            .replace(`{{message}}`, message)
-            .replace(`{{postfixes}}`, postfixes.sort().join(this._options.postfixesSeparator ?? ', '));
+            .replace(`{{entities}}`, entitiesString)
+            .replace(`{{message}}`, message);
+        if (isArray(postfixReplaceOptions)) {
+            const [replaceString, prefix, postfix] = postfixReplaceOptions;
+            return commitMessage.replace(replaceString, `${prefix}${postfixesString}${postfix}`);
+        }
+        return commitMessage;
     }
     _getSelectChoicesByOption(option) {
         if (isArray(option)) {
@@ -109,5 +116,9 @@ export class Commiter {
                 name: key, value: value,
             }));
         }
+    }
+    _getReplaceOptions(type) {
+        const [replaceString, prefix, postfix] = this._options.pattern.match(new RegExp(`{{(.+|)${type}(.+|)}}`));
+        return [replaceString, prefix, postfix];
     }
 }

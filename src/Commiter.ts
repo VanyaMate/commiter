@@ -7,6 +7,7 @@ import {
 import { checkbox, expand, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
+import * as repl from 'node:repl';
 
 
 export class Commiter implements ICommiter {
@@ -104,11 +105,21 @@ export class Commiter implements ICommiter {
     }
 
     private _getCommitMessage (type: string, entities: Array<string>, message: string, postfixes: Array<string>): string {
-        return this._options.pattern
+        const entitiesString        = entities.sort().join(this._options.entitiesSeparator ?? ', ');
+        const postfixesString       = postfixes.sort().join(this._options.postfixesSeparator ?? ', ');
+        const postfixReplaceOptions = this._getReplaceOptions('postfixes');
+
+        const commitMessage = this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entities}}`, entities.sort().join(this._options.entitiesSeparator ?? ', '))
-            .replace(`{{message}}`, message)
-            .replace(`{{postfixes}}`, postfixes.sort().join(this._options.postfixesSeparator ?? ', '));
+            .replace(`{{entities}}`, entitiesString)
+            .replace(`{{message}}`, message);
+
+        if (isArray(postfixReplaceOptions)) {
+            const [ replaceString, prefix, postfix ] = postfixReplaceOptions;
+            return commitMessage.replace(replaceString, `${ prefix }${ postfixesString }${ postfix }`);
+        }
+
+        return commitMessage;
     }
 
     private _getSelectChoicesByOption (option: CommiterListOption): Array<Choice<string>> {
@@ -128,5 +139,10 @@ export class Commiter implements ICommiter {
                     name: key, value: value,
                 }));
         }
+    }
+
+    private _getReplaceOptions (type: string): [ string, string, string ] | null {
+        const [ replaceString, prefix, postfix ] = this._options.pattern.match(new RegExp(`{{(.+|)${type}(.+|)}}`)) as Array<string>;
+        return [ replaceString, prefix, postfix ];
     }
 }

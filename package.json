@@ -1,6 +1,6 @@
 {
     "name": "@vanyamate/commiter",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Simple commiter for project",
     "keywords": [
         "Git"
