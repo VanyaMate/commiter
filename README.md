@@ -54,14 +54,14 @@ const config: CommiterOptions = {
         'Telegram notify': 'tg',
     },
     postfixesSeparator     : '%',
-    pattern                : '{{type}} : {{entities}} - {{message}} %{{postfixes}}%',
+    pattern                : `{{type}} : {{entities}} - {{message}}{{%postfixes%}}`,
     gitFolder              : gitFolder,
     gitRemoteRepositoryName: 'origin',
     gitPushDefault         : true,
 };
 ```
 
-Типы и сущности можно указывать как:
+Типы `types`, сущности `entities` и `postfixes` можно указывать как:
 
 - Массив строк
 - Массив строк + объекты с одним значением
@@ -72,7 +72,12 @@ const config: CommiterOptions = {
 - `{{type}}` - заменится на указанный тип из списка `types`
 - `{{entities}}` - заменится на выбранные сущности из `entities`
 - `{{message}}` - заменится на введенное сообщение
-- `{{postfixes}}` - заменится на выбранные `postfixes`
+- `{{postfixes}}` - заменится на выбранные `postfixes`. Можно писать как `{{%postfixes%}}` или что угодно другое
+  внутри `{{ТУТ postfixes И ТУТ}}`. Тогда то что перед `postfixes` и после - вставится перед и после всех постфиксов
+  соответственно. Допустим у нас есть строчка: `{{type}} : {{entities}} - {{message}}{{%postfixes%_%}}`, и мы выбрали
+  постфиксы `tg` и `notify`. Тогда строчка `{{%postfixes%_%}}` заменится на `%tg, notify%_%`. Если мы не выберем
+  ничего - тогда строчка и никаких `%` и `%_%` не будет. (работает только с postfixes так как они не являются
+  обязательными)
 
 `gitFolder` - папка в которой будут вызываться команды `git add .` и `git commit -m "полное сообщение"`
 
@@ -80,6 +85,10 @@ const config: CommiterOptions = {
 Например: `origin`. Если этот параметр указан, то добавится поле выбора автоматического push-а.
 
 `gitPushDefault` - `true` означает, что по умолчанию при выборе запушить или нет - будет `y` (Yes), иначе `n` (No)
+
+`entitiesSeparator` - как объединятся выбранные `entities`
+
+`postfixesSeparator` - как объединятся выбранные `postfixes`
 
 Дальше создать эксемпляр в который передать конфиг коммитера и вызвать метод `create`
 
