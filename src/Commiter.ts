@@ -7,6 +7,8 @@ import {
 import { checkbox, expand, input, select } from '@inquirer/prompts';
 import { isArray, isString } from '@vanyamate/types-kit';
 import { execSync } from 'child_process';
+import inquirer from 'inquirer';
+import checkboxWithSearch from '@vanyamate/inquirer-checkbox-with-search';
 
 
 export class Commiter implements ICommiter {
@@ -38,13 +40,16 @@ export class Commiter implements ICommiter {
     }
 
     private async _getEntities (): Promise<Array<string>> {
-        return checkbox({
-            message : 'Commit entities:',
-            choices : this._getSelectChoicesByOption(this._options.entities),
-            required: true,
-            theme   : {
-                helpMode: 'always',
+        return checkboxWithSearch({
+            checkbox: {
+                message : 'Commit entities:',
+                choices : this._getSelectChoicesByOption(this._options.entities),
+                required: true,
+                theme   : {
+                    helpMode: 'always',
+                },
             },
+            input   : {},
         });
     }
 
