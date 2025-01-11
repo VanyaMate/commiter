@@ -7,6 +7,7 @@ export declare class Commiter implements ICommiter {
     private _getType;
     private _getEntities;
     private _getMessage;
+    private _getPostfixes;
     private _getAutoPush;
     private _createCommit;
     private _getCommitMessage;

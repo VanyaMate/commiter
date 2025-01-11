@@ -5,6 +5,9 @@ export type CommiterListOption =
 export type CommiterOptions = {
     types: CommiterListOption;
     entities: CommiterListOption;
+    entitiesSeparator?: string;
+    postfixes?: CommiterListOption;
+    postfixesSeparator?: string;
     pattern: string;
     gitFolder: string;
     gitRemoteRepositoryName?: string;

@@ -10,7 +10,15 @@ const gitFolder  = resolve(__dirname, '..', '..');
 export default {
     types                  : [ 'Update', 'New feature', 'Fix' ],
     entities               : [ 'App' ],
-    pattern                : '{{type}} : {{entities}} - {{message}}',
+    entitiesSeparator      : ', ',
+    pattern                : `{{type}} : {{entities}} - {{message}} %{{postfixes}}%`,
+    postfixes              : {
+        'Unit tests'     : 'unit',
+        'Build'          : 'build',
+        'Playwright'     : 'playwright',
+        'Telegram notify': 'tg',
+    },
+    postfixesSeparator     : '%',
     gitFolder              : gitFolder,
     gitRemoteRepositoryName: 'origin',
     gitPushDefault         : true,

@@ -14,16 +14,17 @@ export class Commiter implements ICommiter {
     }
 
     public async create (): Promise<void> {
-        const type     = await this._getType();
-        const entities = await this._getEntities();
-        const message  = await this._getMessage();
+        const type      = await this._getType();
+        const entities  = await this._getEntities();
+        const message   = await this._getMessage();
+        const postfixes = await this._getPostfixes();
 
         if (this._options.gitRemoteRepositoryName) {
             const autoPush = await this._getAutoPush();
-            return this._createCommit(type, entities, message, autoPush);
+            return this._createCommit(type, entities, message, postfixes, autoPush);
         }
 
-        return this._createCommit(type, entities, message);
+        return this._createCommit(type, entities, message, postfixes);
     }
 
     private async _getType (): Promise<string> {
@@ -51,6 +52,27 @@ export class Commiter implements ICommiter {
         return input({ message: 'Commit message:' });
     }
 
+    private async _getPostfixes (): Promise<Array<string>> {
+        if (!this._options.postfixes) {
+            return [];
+        }
+
+        const choices = this._getSelectChoicesByOption(this._options.postfixes);
+
+        if (!choices.length) {
+            return [];
+        }
+
+        return checkbox({
+            message : 'Commit postfixes:',
+            choices : choices,
+            required: false,
+            theme   : {
+                helpMode: 'always',
+            },
+        });
+    }
+
     private async _getAutoPush (): Promise<boolean> {
         return expand({
             message : `Auto push? (default ${ this._options.gitPushDefault
@@ -72,20 +94,21 @@ export class Commiter implements ICommiter {
         });
     }
 
-    private _createCommit (type: string, entities: Array<string>, message: string, autoPush: boolean = false) {
+    private _createCommit (type: string, entities: Array<string>, message: string, postfixes: Array<string>, autoPush: boolean = false) {
         execSync('git add .', { cwd: this._options.gitFolder });
-        execSync(`git commit -m "${ this._getCommitMessage(type, entities, message) }"`, { cwd: this._options.gitFolder });
+        execSync(`git commit -m "${ this._getCommitMessage(type, entities, message, postfixes) }"`, { cwd: this._options.gitFolder });
 
         if (autoPush) {
             execSync(`git push ${ this._options.gitRemoteRepositoryName } HEAD`, { cwd: this._options.gitFolder });
         }
     }
 
-    private _getCommitMessage (type: string, entities: Array<string>, message: string): string {
+    private _getCommitMessage (type: string, entities: Array<string>, message: string, postfixes: Array<string>): string {
         return this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entities}}`, entities.sort().join(', '))
-            .replace(`{{message}}`, message);
+            .replace(`{{entities}}`, entities.sort().join(this._options.entitiesSeparator ?? ', '))
+            .replace(`{{message}}`, message)
+            .replace(`{{postfixes}}`, postfixes.sort().join(this._options.postfixesSeparator ?? ', '));
     }
 
     private _getSelectChoicesByOption (option: CommiterListOption): Array<Choice<string>> {

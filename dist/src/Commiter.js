@@ -10,11 +10,14 @@ export class Commiter {
         const type = await this._getType();
         const entities = await this._getEntities();
         const message = await this._getMessage();
+        const postfixes = this._options.postfixes?.length
+            ? await this._getPostfixes()
+            : [];
         if (this._options.gitRemoteRepositoryName) {
             const autoPush = await this._getAutoPush();
-            return this._createCommit(type, entities, message, autoPush);
+            return this._createCommit(type, entities, message, postfixes, autoPush);
         }
-        return this._createCommit(type, entities, message);
+        return this._createCommit(type, entities, message, postfixes);
     }
     async _getType() {
         return select({
@@ -38,6 +41,16 @@ export class Commiter {
     async _getMessage() {
         return input({ message: 'Commit message:' });
     }
+    async _getPostfixes() {
+        return checkbox({
+            message: 'Commit postfixes:',
+            choices: this._getSelectChoicesByOption(this._options.postfixes),
+            required: true,
+            theme: {
+                helpMode: 'always',
+            },
+        });
+    }
     async _getAutoPush() {
         return expand({
             message: `Auto push? (default ${this._options.gitPushDefault
@@ -58,18 +71,19 @@ export class Commiter {
             ],
         });
     }
-    _createCommit(type, entities, message, autoPush = false) {
+    _createCommit(type, entities, message, postfixes, autoPush = false) {
         execSync('git add .', { cwd: this._options.gitFolder });
-        execSync(`git commit -m "${this._getCommitMessage(type, entities, message)}"`, { cwd: this._options.gitFolder });
+        execSync(`git commit -m "${this._getCommitMessage(type, entities, message, postfixes)}"`, { cwd: this._options.gitFolder });
         if (autoPush) {
             execSync(`git push ${this._options.gitRemoteRepositoryName} HEAD`, { cwd: this._options.gitFolder });
         }
     }
-    _getCommitMessage(type, entities, message) {
+    _getCommitMessage(type, entities, message, postfixes) {
         return this._options.pattern
             .replace(`{{type}}`, type)
-            .replace(`{{entities}}`, entities.sort().join(', '))
-            .replace(`{{message}}`, message);
+            .replace(`{{entities}}`, entities.sort().join(this._options.entitiesSeparator ?? ', '))
+            .replace(`{{message}}`, message)
+            .replace(`{{postfixes}}`, postfixes.sort().join(this._options.postfixesSeparator ?? ', '));
     }
     _getSelectChoicesByOption(option) {
         if (isArray(option)) {
