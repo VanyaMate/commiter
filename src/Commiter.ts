@@ -116,7 +116,12 @@ export class Commiter implements ICommiter {
 
         if (isArray(postfixReplaceOptions)) {
             const [ replaceString, prefix, postfix ] = postfixReplaceOptions;
-            return commitMessage.replace(replaceString, `${ prefix }${ postfixesString }${ postfix }`);
+            return commitMessage.replace(
+                replaceString,
+                postfixesString
+                ? `${ prefix }${ postfixesString }${ postfix }`
+                : '',
+            );
         }
 
         return commitMessage;
@@ -142,7 +147,7 @@ export class Commiter implements ICommiter {
     }
 
     private _getReplaceOptions (type: string): [ string, string, string ] | null {
-        const [ replaceString, prefix, postfix ] = this._options.pattern.match(new RegExp(`{{(.+|)${type}(.+|)}}`)) as Array<string>;
+        const [ replaceString, prefix, postfix ] = this._options.pattern.match(new RegExp(`\{\{([^{}]*)${type}([^{}]*)}\}`)) as Array<string>;
         return [ replaceString, prefix, postfix ];
     }
 }
