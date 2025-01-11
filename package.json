@@ -24,7 +24,7 @@
         "typescript": "^5.7.3"
     },
     "dependencies": {
-        "@vanyamate/inquirer-checkbox-with-search": "^0.0.5",
+        "@vanyamate/inquirer-checkbox-with-search": "^0.0.6",
         "@vanyamate/types-kit": "^0.0.15"
     }
 }
