@@ -1,6 +1,6 @@
 {
     "name": "@vanyamate/commiter",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "description": "Simple commiter for project",
     "keywords": [
         "Git"
@@ -24,7 +24,7 @@
         "typescript": "^5.7.3"
     },
     "dependencies": {
-        "@vanyamate/inquirer-checkbox-with-search": "^0.0.6",
+        "@vanyamate/inquirer-checkbox-with-search": "^0.0.7",
         "@vanyamate/types-kit": "^0.0.15"
     }
 }
