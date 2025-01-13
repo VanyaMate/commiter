@@ -8,17 +8,10 @@ const __dirname  = dirname(__filename);
 const gitFolder  = resolve(__dirname, '..', '..');
 
 export default {
-    types                  : [ 'Update', 'New feature', 'Fix' ],
+    types                  : [ '💡 Update', '🙏 Fix', '🔥 New feature' ],
     entities               : [ 'App' ],
     entitiesSeparator      : ', ',
-    pattern                : `{{type}} : {{entities}} - {{message}}{{ %postfixes%}}`,
-    postfixes              : {
-        'Unit tests'     : 'unit',
-        'Build'          : 'build',
-        'Playwright'     : 'playwright',
-        'Telegram notify': 'tg',
-    },
-    postfixesSeparator     : '%',
+    pattern                : `{{type}} : {{entities}} - {{message}} {{postfixes}}`,
     gitFolder              : gitFolder,
     gitRemoteRepositoryName: 'origin',
     gitPushDefault         : true,
