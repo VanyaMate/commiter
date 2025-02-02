@@ -8,7 +8,7 @@
 Установка:
 
 ```shell
-npm i @vanyamate/commiter
+npm i -D @vanyamate/commiter
 ```
 
 Для начала нужно создать конфиг c типом:
@@ -34,7 +34,9 @@ export type CommiterOptions = {
 Например:
 
 ```typescript
-import { CommiterOptions } from './Commiter.types';
+// utils/git/commiter.config.ts
+
+import { CommiterOptions } from '@vanyamate/commiter';
 
 
 const __dirname = import.meta.dirname;
@@ -94,8 +96,10 @@ push работать не будет.
 Дальше создать эксемпляр в который передать конфиг коммитера и вызвать метод `create`
 
 ```typescript
+// utils/git/commiter.ts
+
 import { Commiter } from '@vanyamate/commiter';
-import config from './config';
+import config from './commiter.config';
 
 
 new Commiter(config).create();
